@@ -19,19 +19,16 @@ function IDGenerateer(){
         idNumber.push(Number(inputArray[i].id));
     } 
     idNumber=idNumber.sort();
-    console.log(idNumber);
-    if(idNumber.length>=2){
-        console.log(idNumber[0]===1)
-    }
+ 
     if(!(idNumber.includes(1))){
         
-        console.log("Hi!");
+        
         return 1;
     }else{
-        console.log("없어!");
+       
     }
     if(idNumber.length===0){
-        console.log("설마 니냐");
+       
         return 1;
     }
     for(var i=0;i<idNumber.length-1;i++){
@@ -42,7 +39,7 @@ function IDGenerateer(){
     return Number(idNumber[idNumber.length-1]+1);  
 }
 function saveFile(){
-    console.log(inputArray)
+
     if(inputArray.length<=0){
         alert("please insert more than 1.");
     }else{
@@ -76,7 +73,7 @@ function deleteToDo(event) {
 
 function handleCheckButton(){
     checking=anonymous.checked;
-    console.log(checking);
+    
     if(checking){
         input.type="password";
         input.style="ime-mode:auto";
@@ -133,20 +130,28 @@ function editToDo(event){
     })
     
     endEdit.addEventListener("click",function(e){
-        newLots.innerText=editBlank.value;
-         li.removeChild(editBlank);
-         li.appendChild(newLots);
-         li.appendChild(buttonNwe2);
-         li.appendChild(buttonNwe);
-         li.removeChild(endEdit);
-         li.removeChild(cancelButton);
-         buttonNwe2.addEventListener("click",deleteToDo);
-         buttonNwe.addEventListener("click",editToDo);
-         inputArray.forEach(toDo => {
-             if(toDo.id===li.id){
-                 toDo.text=newLots.innerText
-             }
-         });
+       
+        if(editBlank.value.length===0){
+            alert("Please enter a word!")
+        }else{
+            
+            newLots.innerText=editBlank.value;
+            li.removeChild(editBlank);
+            li.appendChild(newLots);
+            li.appendChild(buttonNwe2);
+            li.appendChild(buttonNwe);
+            li.removeChild(endEdit);
+            li.removeChild(cancelButton);
+            buttonNwe2.addEventListener("click",deleteToDo);
+            buttonNwe.addEventListener("click",editToDo);
+       
+            inputArray.forEach(toDo => {
+                if(toDo.id===li.id){
+                    toDo.text=newLots.innerText
+                }
+            });
+        }
+      
      })
  
   
@@ -188,7 +193,13 @@ function handleButton(event){
     if(inputArray.length>1){
         
         const ranNumber=Math.floor(Math.random()*(inputArray.length-1+1));
-        WhatYouGot.innerText=inputArray[ranNumber].text;
+        const len=inputArray[ranNumber].text.length
+        if(inputArray[ranNumber].text.startsWith("secret_")){
+            WhatYouGot.innerText=inputArray[ranNumber].text.substring(7,len);
+        }else{
+            WhatYouGot.innerText=inputArray[ranNumber].text
+        }
+       
     }else{
         alert("please insert more than 1.");
     }
@@ -203,7 +214,14 @@ function readFile1(e) {
     
     reader.onload = function(e) {
         files=reader.result.split('\n');
+        
         for(var i=0;i<files.length;i++){
+            if(files[i].length==0||files[i]===""){
+                continue;
+            }
+            if(files[i][files[i].length-1].charCodeAt(0)==13){
+                files[i]=files[i].substring(0,files[i].length-1);
+            }
             const potato=document.createElement("li");
             const delBtn=document.createElement("button");
             const editButton=document.createElement("button");
@@ -265,6 +283,9 @@ function readFile1(e) {
                 })
                 
                 endEdit.addEventListener("click",function(e){
+                    if(editBlank.value.length===0){
+                        alert("Please enter a word!")
+                    }else{
                     newLots.innerText=editBlank.value;
                      li.removeChild(editBlank);
                      li.appendChild(newLots);
@@ -279,14 +300,26 @@ function readFile1(e) {
                              toDo.text=newLots.innerText
                          }
                      });
-                 })})
+                 }})})
             const span=document.createElement("span");
             const newId=IDGenerateer()
-            span.innerText=files[i];
-        
+            
+            if(files[i].startsWith("secret_")){
+                console.log(files[i])
+                span.innerText="*****";
+            }else{
+                console.log(files[i])
+                span.innerText=files[i];
+            }
+
             potato.appendChild(span);
             potato.appendChild(delBtn);
-            potato.appendChild(editButton);
+            if(files[i].startsWith("secret_")){
+                const a=3;
+            }else{
+                potato.appendChild(editButton);
+            }
+           
             list.appendChild(potato);
             
             potato.id=newId;
@@ -301,7 +334,7 @@ function readFile1(e) {
         
         //file데이터를 읽어서 처리할 로직.
     };
-    reader.readAsText(file, 'euc-kr');
+    reader.readAsText(file, 'utf-8');
 }
 
 
@@ -316,6 +349,4 @@ anonymous.addEventListener("click",handleCheckButton);
 
 downloadButton.addEventListener("click",saveFile)
 
-console.log(window.innerHeight,window.innerWidth);
 
-window.addEventListener("resize",handleWebSize);
