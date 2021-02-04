@@ -177,7 +177,12 @@ function handleInput(event){
     
     potato.appendChild(span);
     potato.appendChild(delBtn);
-    potato.appendChild(editButton);
+    if(checkBoolean){
+        const hi="this is for nothing"
+    }else{
+        potato.appendChild(editButton);
+    }
+   
 
     list.appendChild(potato);
     potato.id=IDGenerateer();
