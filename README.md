@@ -6,6 +6,10 @@ How to add Lots?
 1.Type a word on the whiteboard.
 2.Please enter a Enter Key
 
+Text file rules!
+
+You should separate lots by pressing enter.
+
 How to make secret lot in text file?
 
 please type a "secret_" in front of a word.
